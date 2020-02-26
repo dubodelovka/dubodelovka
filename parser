@@ -1,0 +1,51 @@
+# вариант 1
+import requests
+from bs4 import BeautifulSoup
+
+
+def get_html(url):
+    r = requests.get(url)
+    return r.text
+
+def get_ip(html):
+    soup = BeautifulSoup(html, 'lxnl')
+    ip = soup.find('span', class_='ip') .text.strip()
+    ua = soup.find('span', class_='ip') .find_next_sibling('span').text.strip()
+    print(ip)
+    print(ua)
+
+
+
+
+    def main():
+        url = 'http://sitespy.ru/my-ip'
+        html = get_html()
+        get_ip(html)
+
+
+
+
+    if  __name__ == '__main__':
+        main()
+
+
+# вариант 2
+import requests
+from bs4 import BeautifulSoup as bs
+
+headers = {'accept': '=/=',
+           'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.100 Safari/537.36'}
+
+base_url = 'https://www.cian.ru/cat.php?currency=2&deal_type=rent&engine_version=2&maxprice=25000&offer_type=flat&region=1&type=4'
+
+def cian_pars(base_url, headers):
+    session = requests.Session()
+    request = session.get(base_url, headers=headers)
+    if request.status_code == 200:
+        soup = bs(request.content, 'html.parser')
+        div = soup.find_all('div', attrs={'_93444fe79c--card--_yguQ'})
+        print(soup)
+    else:
+        print('ERROR')
+
+cian_pars(base_url, headers)
